@@ -1,5 +1,5 @@
 ---
-description: 
+description: Always checks guidelines before starting to implement.
 globs: 
 alwaysApply: false
 ---
