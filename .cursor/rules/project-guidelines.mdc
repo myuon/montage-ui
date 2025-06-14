@@ -1,0 +1,38 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Tech Stack
+- Frontend: React (TypeScript)
+- Build tool: Vite
+- Package manager: Bun
+- Styling: CSS (Tailwind etc. can be used as needed)
+- AI Tool: Stagewise Toolbar (development only)
+
+# Development Process
+- Designed for small teams or solo development (team development is also welcome)
+- Code review is optional, but PRs are recommended for important changes
+- Communication is primarily in Japanese
+
+# Commit & Push Rules
+- Always commit and push when you finish a task or reach a milestone
+- Write concise and descriptive commit messages
+- Each commit should have a single, clear purpose
+- Commit and push frequently
+
+# Other
+- Suggestions for improving rules or workflow are welcome
+- AI agents must also follow these rules
+
+<example>
+When you finish a task:
+1. git add .
+2. git commit -m "feat: add image upload feature"
+3. git push
+</example>
+
+<example type="invalid">
+- Making a single commit for a whole day's work
+- Forgetting to push and letting local changes pile up
+</example>
