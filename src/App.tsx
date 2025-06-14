@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { nanoid } from "nanoid";
 import {
   DndContext,
   closestCenter,
@@ -12,11 +13,16 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
+  rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import "./App.css";
+
+interface ImageData {
+  id: string;
+  src: string;
+}
 
 interface SortableImageProps {
   id: string;
@@ -60,7 +66,7 @@ function SortableImage({ id, src, index }: SortableImageProps) {
 }
 
 function App() {
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<ImageData[]>([]);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -73,14 +79,14 @@ function App() {
     const files = Array.from(e.target.files);
     Promise.all(
       files.map((file) => {
-        return new Promise<string>((resolve, reject) => {
+        return new Promise<ImageData>((resolve, reject) => {
           const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
+          reader.onload = () => resolve({ id: nanoid(), src: reader.result as string });
           reader.onerror = reject;
           reader.readAsDataURL(file);
         });
       })
-    ).then((imgs) => setImages((prev) => [...prev, ...imgs]));
+    ).then((imageDataArray) => setImages((prev) => [...prev, ...imageDataArray]));
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -89,10 +95,10 @@ function App() {
     if (active.id !== over?.id) {
       setImages((items) => {
         const oldIndex = items.findIndex(
-          (_, index) => `image-${index}` === active.id
+          (item) => item.id === active.id
         );
         const newIndex = items.findIndex(
-          (_, index) => `image-${index}` === over?.id
+          (item) => item.id === over?.id
         );
 
         return arrayMove(items, oldIndex, newIndex);
@@ -139,8 +145,8 @@ function App() {
         onDragEnd={handleDragEnd}
       >
         <SortableContext
-          items={images.map((_, index) => `image-${index}`)}
-          strategy={verticalListSortingStrategy}
+          items={images.map((image) => image.id)}
+          strategy={rectSortingStrategy}
         >
           <div
             style={{
@@ -149,11 +155,11 @@ function App() {
               gap: 16,
             }}
           >
-            {images.map((src, idx) => (
+            {images.map((image, idx) => (
               <SortableImage
-                key={`image-${idx}`}
-                id={`image-${idx}`}
-                src={src}
+                key={image.id}
+                id={image.id}
+                src={image.src}
                 index={idx}
               />
             ))}
