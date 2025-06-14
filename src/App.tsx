@@ -1,7 +1,7 @@
 import { useState } from "react";
-import "./App.css";
 import { StagewiseToolbar } from "@stagewise/toolbar-react";
 import { ReactPlugin } from "@stagewise-plugins/react";
+import "./App.css";
 
 function App() {
   const [images, setImages] = useState<string[]>([]);
@@ -23,14 +23,40 @@ function App() {
 
   return (
     <>
-      <StagewiseToolbar config={{ plugins: [ReactPlugin] }} />
+      <StagewiseToolbar
+        config={{
+          plugins: [ReactPlugin],
+        }}
+      />
       <div style={{ marginBottom: 16 }}>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleImageUpload}
-        />
+        <label
+          style={{
+            display: "inline-block",
+            padding: "8px 16px",
+            backgroundColor: "#4a90e2",
+            color: "white",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: 500,
+            transition: "background-color 0.2s",
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.backgroundColor = "#357abd";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.backgroundColor = "#4a90e2";
+          }}
+        >
+          画像をアップロード
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageUpload}
+            style={{ display: "none" }}
+          />
+        </label>
       </div>
       <div
         style={{
