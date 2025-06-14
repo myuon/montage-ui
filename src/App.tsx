@@ -1,10 +1,75 @@
 import { useState } from "react";
 import { StagewiseToolbar } from "@stagewise/toolbar-react";
 import { ReactPlugin } from "@stagewise-plugins/react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import "./App.css";
+
+interface SortableImageProps {
+  id: string;
+  src: string;
+  index: number;
+}
+
+function SortableImage({ id, src, index }: SortableImageProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <img
+        src={src}
+        alt={`uploaded-${index}`}
+        style={{
+          width: "100%",
+          height: 120,
+          objectFit: "cover",
+          borderRadius: 8,
+          boxShadow: "0 2px 8px #0001",
+          cursor: "grab",
+        }}
+      />
+    </div>
+  );
+}
 
 function App() {
   const [images, setImages] = useState<string[]>([]);
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -19,6 +84,19 @@ function App() {
         });
       })
     ).then((imgs) => setImages((prev) => [...prev, ...imgs]));
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      setImages((items) => {
+        const oldIndex = items.findIndex((_, index) => `image-${index}` === active.id);
+        const newIndex = items.findIndex((_, index) => `image-${index}` === over?.id);
+
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
   };
 
   return (
@@ -58,28 +136,33 @@ function App() {
           />
         </label>
       </div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
-          gap: 16,
-        }}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
       >
-        {images.map((src, idx) => (
-          <img
-            key={idx}
-            src={src}
-            alt={`uploaded-${idx}`}
+        <SortableContext
+          items={images.map((_, index) => `image-${index}`)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div
             style={{
-              width: "100%",
-              height: 120,
-              objectFit: "cover",
-              borderRadius: 8,
-              boxShadow: "0 2px 8px #0001",
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: 16,
             }}
-          />
-        ))}
-      </div>
+          >
+            {images.map((src, idx) => (
+              <SortableImage
+                key={`image-${idx}`}
+                id={`image-${idx}`}
+                src={src}
+                index={idx}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
     </>
   );
 }
