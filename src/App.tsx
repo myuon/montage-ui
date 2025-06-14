@@ -38,6 +38,7 @@ function SortableImage({ id, src, index }: SortableImageProps) {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 1000 : 1,
   };
 
   return (
@@ -106,19 +107,19 @@ function App() {
           style={{
             display: "inline-block",
             padding: "8px 16px",
-            backgroundColor: "#4a90e2",
+            backgroundColor: "#205493",
             color: "white",
             borderRadius: "4px",
             cursor: "pointer",
             fontSize: "14px",
-            fontWeight: 500,
+            fontWeight: 600,
             transition: "background-color 0.2s",
           }}
           onMouseOver={(e) => {
-            e.currentTarget.style.backgroundColor = "#357abd";
+            e.currentTarget.style.backgroundColor = "#163d66";
           }}
           onMouseOut={(e) => {
-            e.currentTarget.style.backgroundColor = "#4a90e2";
+            e.currentTarget.style.backgroundColor = "#205493";
           }}
         >
           画像をアップロード
