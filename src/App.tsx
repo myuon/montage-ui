@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { StagewiseToolbar } from "@stagewise/toolbar-react";
-import { ReactPlugin } from "@stagewise-plugins/react";
 import {
   DndContext,
   closestCenter,
@@ -16,9 +14,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import {
-  useSortable,
-} from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import "./App.css";
 
@@ -91,8 +87,12 @@ function App() {
 
     if (active.id !== over?.id) {
       setImages((items) => {
-        const oldIndex = items.findIndex((_, index) => `image-${index}` === active.id);
-        const newIndex = items.findIndex((_, index) => `image-${index}` === over?.id);
+        const oldIndex = items.findIndex(
+          (_, index) => `image-${index}` === active.id
+        );
+        const newIndex = items.findIndex(
+          (_, index) => `image-${index}` === over?.id
+        );
 
         return arrayMove(items, oldIndex, newIndex);
       });
@@ -101,11 +101,6 @@ function App() {
 
   return (
     <>
-      <StagewiseToolbar
-        config={{
-          plugins: [ReactPlugin],
-        }}
-      />
       <div style={{ marginBottom: 16 }}>
         <label
           style={{
