@@ -102,6 +102,7 @@ function App() {
 
   return (
     <>
+      <h1 style={{ marginBottom: 32 }}>Montage UI</h1>
       <div style={{ marginBottom: 16 }}>
         <label
           style={{
