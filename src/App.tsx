@@ -132,13 +132,8 @@ function App() {
     <>
       <div
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
           backgroundColor: "white",
           padding: "12px 24px",
-          zIndex: 1000,
           boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
           display: "flex",
           alignItems: "center",
@@ -185,7 +180,7 @@ function App() {
           />
         </label>
       </div>
-      <div style={{ marginTop: 88, padding: "32px 48px 0" }}>
+      <div style={{ padding: "32px 48px 0" }}>
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
